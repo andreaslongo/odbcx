@@ -1,0 +1,47 @@
+name: "Release"
+
+# Only run when a new tag is pushed
+on:
+  push:
+    branches:
+      - '!*'
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update
+          sudo apt-get install mingw-w64
+          rustup target add i686-pc-windows-gnu i686-unknown-linux-musl x86_64-pc-windows-gnu x86_64-unknown-linux-musl
+          RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target i686-unknown-linux-musl
+          RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target x86_64-unknown-linux-musl
+          RUSTFLAGS="-C target-feature=+crt-static -C linker=i686-w64-mingw32-gcc" cargo build --release --target i686-pc-windows-gnu
+          RUSTFLAGS="-C target-feature=+crt-static -C linker=x86_64-w64-mingw32-gcc" cargo build --release --target x86_64-pc-windows-gnu
+          tar -czvf odbcx-i686-unknown-linux-musl.tar.gz --directory target/i686-unknown-linux-musl/release odbcx
+          tar -czvf odbcx-x86_64-unknown-linux-musl.tar.gz --directory target/x86_64-unknown-linux-musl/release odbcx
+          zip odbcx-i686-pc-windows-gnu.zip target/i686-pc-windows-gnu/release/odbcx.exe
+          zip odbcx-x86_64-pc-windows-gnu.zip target/x86_64-pc-windows-gnu/release/odbcx.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: odbcx-*
+
+
+  release:
+    needs: "build"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+              odbcx-i686-pc-windows-gnu.zip
+              odbcx-i686-unknown-linux-musl.tar.gz
+              odbcx-x86_64-pc-windows-gnu.zip
+              odbcx-x86_64-unknown-linux-musl.tar.gz

@@ -1,0 +1,94 @@
+= odbcx
+
+A CLI utility for sending SQL queries to a database via ODBC.
+
+If you are looking for a more powerful tool, try https://github.com/microsoft/go-sqlcmd[sqlcmd] and similar tools.
+
+== Getting started
+
+. Download and unpack the latest https://github.com/andreaslongo/odbcx/releases[binary release] for your platform:
+** *Linux*
+*** 64-bit: https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-x86_64-unknown-linux-musl.tar.gz[odbcx-x86_64-unknown-linux-musl.tar.gz]
+*** 32-bit: https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-i686-unknown-linux-musl.tar.gz[odbcx-i686-unknown-linux-musl.tar.gz]
+** *Windows*
+*** 64-bit: https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-x86_64-pc-windows-gnu.zip[odbcx-x86_64-pc-windows-gnu.zip]
+*** 32-bit: https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-i686-pc-windows-gnu.zip[odbcx-i686-pc-windows-gnu.zip]
+
+. Use the ODBC implementation of your choice and create a DSN (Data Source Name).
+
+. Create a `.env` file with the following content:
++
+----
+DSN=<your DSN>
+USER=<DB user>
+PASSWORD=<DB password>
+----
+
+. Open a terminal and run the program.
+
+[,console]
+----
+$ ./odbcx --help      # Linux
+$ .\odbcx.exe --help  # Windows
+----
+
+== Features
+
+=== Executing a single query
+
+[,console]
+----
+$ ./odbcx query 'SELECT * FROM mytable'
+----
+
+=== Executing a SQL script
+
+[,console]
+----
+$ .odbcx file './myscript.sql'
+----
+
+== Changelog
+
+All notable changes will be documented here.
+
+The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
+and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
+
+=== [0.1.0] 2024-07-24
+
+Initial release.
+
+== Contributing
+
+The best way to get started is to build and run a local dev container.
+
+You can use https://podman.io[Podman] or any other OCI compliant container manager.
+The dev container has all the required dependencies for working with the project.
+
+[,console]
+----
+$ container/build.sh
+$ container/run.sh
+----
+
+From inside the container, you can then run some workflows.
+
+[,console]
+----
+$ cargo fmt && cargo clippy --all-targets  # run code formatter and linter
+$ cargo test   # run tests
+$ cargo doc    # build the docs
+$ cargo run    # run the binary crate
+$ cargo clean  # remove build artifacts
+----
+
+=== Useful resources
+
+* https://github.com/andreaslongo/learn-rust
+
+== License
+
+Copyright (C) 2024 Andreas Longo
+
+GNU General Public License v3.0 or later
