@@ -45,7 +45,7 @@ $ ./odbcx query 'SELECT * FROM mytable'
 
 [,console]
 ----
-$ .odbcx file './myscript.sql'
+$ ./odbcx file './myscript.sql'
 ----
 
 == Changelog
