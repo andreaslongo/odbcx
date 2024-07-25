@@ -2,8 +2,6 @@
 
 A CLI utility for sending SQL queries to a database via ODBC.
 
-If you are looking for a more powerful tool, try https://github.com/microsoft/go-sqlcmd[sqlcmd] and similar tools.
-
 == Getting started
 
 . Download and unpack the latest https://github.com/andreaslongo/odbcx/releases[binary release] for your platform:
@@ -36,6 +34,8 @@ $ .\odbcx.exe --help  # Windows
 ----
 
 == Features
+
+If you are looking for a more powerful tool, try https://github.com/microsoft/go-sqlcmd[sqlcmd] and similar tools.
 
 === Executing a single query
 
