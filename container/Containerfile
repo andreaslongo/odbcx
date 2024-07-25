@@ -11,6 +11,7 @@ RUN set -o errexit \
     && apt-get upgrade --assume-yes --no-install-recommends \
     && apt-get install --assume-yes --no-install-recommends \
         mingw-w64 \
+        unixodbc-dev \
     && apt-get clean \
     && apt-get purge --assume-yes --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get check \
@@ -31,6 +32,9 @@ RUN set -o errexit \
     set -o nounset \
     set -o pipefail \
     set -o xtrace \
+    && rustup target add \
+        x86_64-pc-windows-gnu \
+        x86_64-unknown-linux-gnu \
     && rustup component add \
         clippy \
         rustfmt
