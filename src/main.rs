@@ -7,7 +7,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
-use anyhow::Error;
+use anyhow::{bail, Context, Error};
 use dotenv::dotenv;
 use human_panic::setup_panic;
 use odbc_api::{buffers::TextRowSet, ConnectionOptions, Cursor, Environment, ResultSetMetadata};
@@ -22,38 +22,31 @@ fn main() -> Result<(), Error> {
 
     let args: Vec<String> = env::args().collect();
     if args.len() != 3 {
-        eprintln!(
+        bail!(
             "Usage: {} <file|query> <path to SQL script file|SQL query>",
             args[0]
         );
-        std::process::exit(1);
     }
     let mode = &args[1];
     let input = &args[2];
 
-    dotenv().ok();
+    dotenv().context("Failed to find .env file")?;
+    let data_source = env::var("DSN").context("DSN must be set in .env file")?;
+    let user = env::var("USER").context("USER must be set in .env file")?;
+    let password = env::var("PASSWORD").context("PASSWORD must be set in .env file")?;
 
-    let data_source = env::var("DSN").expect("DSN must be set");
-
-    let user = env::var("USER").expect("USER must be set");
-
-    let password = env::var("PASSWORD").expect("PASSWORD must be set");
-
-    eprintln!("DSN: {} User: {}", &data_source, &user);
-
-    let sql_script = if mode == "file" {
-        fs::read_to_string(input).expect("Could not read SQL script file")
-    } else if mode == "query" {
-        input.to_string()
-    } else {
-        eprintln!("Invalid mode: {mode}. Use 'file' or 'query'");
-        std::process::exit(1);
+    let sql_script = match mode.as_str() {
+        "file" => fs::read_to_string(input)
+            .with_context(|| format!("Failed to read SQL script from file '{input}'"))?,
+        "query" => input.to_string(),
+        _ => bail!("Invalid mode: {mode}. Use 'file' or 'query'"),
     };
 
     let out = stdout();
     let mut writer = csv::Writer::from_writer(out);
-
     let environment = Environment::new()?;
+
+    eprintln!("Connecting: DSN={} User={}", &data_source, &user);
 
     let connection =
         environment.connect(&data_source, &user, &password, ConnectionOptions::default())?;
