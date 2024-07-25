@@ -9,7 +9,7 @@ If you are looking for a more powerful tool, try https://github.com/microsoft/go
 . Download and unpack the latest https://github.com/andreaslongo/odbcx/releases[binary release] for your platform:
 
 Linux::
-https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-x86_64-unknown-linux-musl.tar.gz[odbcx-x86_64-unknown-linux-musl.tar.gz]
+https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-x86_64-unknown-linux-gnu.tar.gz[odbcx-x86_64-unknown-linux-gnu.tar.gz]
 
 Windows::
 https://github.com/andreaslongo/odbcx/releases/latest/download/odbcx-x86_64-pc-windows-gnu.zip[odbcx-x86_64-pc-windows-gnu.zip]
